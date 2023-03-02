@@ -286,3 +286,4 @@ void usbd_ftdi_add_interface(usbd_class_t *class, usbd_interface_t *intf)
 	intf->notify_handler = ftdi_notify_handler;
 	usbd_class_add_interface(class,intf);
 }
+
