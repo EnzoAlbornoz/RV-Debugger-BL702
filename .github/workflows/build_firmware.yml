@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Cache toolchain
       id: cache
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with: 
         path: /opt/riscv64-unknown-elf
         key : ${{runner.OS}}-riscv64-unknown-elf-caches-${{ hashFiles('bin/riscv64-unknown-elf-gcc') }}
@@ -33,17 +33,19 @@ jobs:
         wget -c https://dev.bouffalolab.com/media/upload/download/riscv64-elf-x86_64-20210120.tar.gz
         mkdir /opt/riscv64-unknown-elf
         tar -zxvf riscv64-elf-x86_64-20210120.tar.gz -C /opt/riscv64-unknown-elf
+
     - name: Make firmware
       run: |
         git submodule update --init
         cd firmware/bl_mcu_sdk
         PATH="/opt/riscv64-unknown-elf/bin:$PATH"
         make BOARD=bl702_debugger APP_DIR=../app APP=usb2uartjtag
-        make BOARD=bl702_debugger_dualuart APP_DIR=../app APP=usb2dualuart
+# make BOARD=bl702_debugger_dualuart APP_DIR=../app APP=usb2dualuart
+        
     - name: Archive firmware
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: sipeed_rv_debuger_plus_firmware
         path: |
           firmware/bl_mcu_sdk/out/app/usb2uartjtag/*
-          firmware/bl_mcu_sdk/out/app/usb2dualuart/*
+# firmware/bl_mcu_sdk/out/app/usb2dualuart/*
